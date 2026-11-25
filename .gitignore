@@ -1,0 +1,7 @@
+# MovieLens is downloaded separately (see the part READMEs)
+data/
+ml-100k/
+*.zip
+.venv/
+__pycache__/
+*.pyc

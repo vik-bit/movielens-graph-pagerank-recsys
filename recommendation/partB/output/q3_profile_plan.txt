@@ -1,0 +1,17 @@
+PROFILE Q3  params={'target_user': 1, 'like_threshold': 4, 'topk': 10}
+result rows=10  total dbHits=71187146
+
+ProduceResults@neo4j                   rows=      10 dbHits=       0  movie_id, title, support
+  Top@neo4j                              rows=      10 dbHits=       0  support DESC, movie_id ASC LIMIT $topk
+    EagerAggregation@neo4j                 rows=    1266 dbHits=       0  cache[b.id] AS movie_id, cache[b.title] AS title, count(DISTINCT x) AS support
+      CacheProperties@neo4j                  rows=  551672 dbHits= 1103344  cache[b.id], cache[b.title]
+        AntiSemiApply@neo4j                    rows=  551672 dbHits=       0  
+          Filter@neo4j                           rows=  734937 dbHits= 2027008  NOT r3 = r2 AND NOT r3 = r1 AND r3.rating >= $like_threshold AND b:Movie
+            Expand(All)@neo4j                      rows= 1300696 dbHits= 1316391  (x)-[r3:RATED]->(b)
+              Filter@neo4j                           rows=    8625 dbHits=   21030  NOT x = u AND NOT r2 = r1 AND r2.rating >= $like_threshold AND x:User
+                Expand(All)@neo4j                      rows=   12489 dbHits=   12733  (a)<-[r2:RATED]-(x)
+                  Filter@neo4j                           rows=      84 dbHits=     219  r1.rating >= $like_threshold AND a:Movie
+                    Expand(All)@neo4j                      rows=     135 dbHits=     137  (u)-[r1:RATED]->(a)
+                      NodeUniqueIndexSeek@neo4j              rows=       1 dbHits=       2  UNIQUE u:User(id) WHERE id = $target_user
+          Expand(Into)@neo4j                     rows=       0 dbHits=66706282  (u)-[:RATED]->(b)
+            Argument@neo4j                         rows=  734937 dbHits=       0  u, b

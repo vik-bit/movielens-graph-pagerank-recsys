@@ -1,0 +1,16 @@
+# Reproducible Linux runtime for the Spark/GraphFrames step (A4) on Windows hosts,
+# where Spark 4.2 requires Hadoop winutils.exe. Python 3.14.10 + OpenJDK 21 + pinned packages.
+#   docker build -f Dockerfile.spark -t bda-a3a-spark .
+#   docker run --rm -v "<PATH_TO_ml-100k>:/data/ml-100k:ro" -v "${PWD}:/work" -w /work bda-a3a-spark \
+#     spark-submit --master "local[*]" --packages io.graphframes:graphframes-spark4_2.13:0.12.3 \
+#     partA/pregel_pagerank.py --data-dir /data/ml-100k --iterations 10 --damping 0.85 \
+#     --output partA/output/pregel_pagerank.csv
+FROM python:3.14.10-slim-trixie
+RUN apt-get update && apt-get install -y --no-install-recommends openjdk-21-jre-headless procps \
+    && rm -rf /var/lib/apt/lists/*
+ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+# Pre-fetch the GraphFrames JVM package into the image's Ivy cache
+RUN echo 'from pyspark.sql import SparkSession; SparkSession.builder.config("spark.jars.packages","io.graphframes:graphframes-spark4_2.13:0.12.3").getOrCreate().stop()' > /tmp/warm.py \
+    && python /tmp/warm.py && rm /tmp/warm.py

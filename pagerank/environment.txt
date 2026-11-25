@@ -1,0 +1,41 @@
+# Environment used for the FINAL run of every submitted output
+# All programs ran inside the container image bda-a3a-spark (built from Dockerfile.spark),
+# launched from a Windows 11 host with Docker Desktop. Host Python/Java were NOT used for the outputs.
+
+$ python --version
+Python 3.14.10
+
+$ java -version
+openjdk version "21.0.13" 2026-10-20
+OpenJDK Runtime Environment (build 21.0.13+9-1-deb13u2-Debian)
+OpenJDK 64-Bit Server VM (build 21.0.13+9-1-deb13u2-Debian, mixed mode, sharing)
+
+$ pip show networkx pyspark graphframes-py neo4j pandas matplotlib   (Name/Version lines)
+Name: networkx
+Version: 3.7
+Name: pyspark
+Version: 4.2.0
+Name: graphframes-py
+Version: 0.12.3
+Name: neo4j
+Version: 6.4.1
+Name: pandas
+Version: 3.1.0
+Name: matplotlib
+Version: 3.11.2
+
+$ pip freeze   (required packages)
+graphframes-py==0.12.3
+matplotlib==3.11.2
+neo4j==6.4.1
+networkx==3.7
+pandas==3.1.0
+pyspark==4.2.0
+
+$ uname -srm; nproc
+Linux 6.6.87.2-microsoft-standard-WSL2 x86_64
+12
+
+## Host
+$ docker --version
+Docker version 29.2.1, build a5c7197

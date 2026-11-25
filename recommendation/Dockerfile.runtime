@@ -1,0 +1,16 @@
+# Pinned runtime used for the final run of Part B: Python 3.14.10 + the six pinned packages
+# (+ OpenJDK 21, identical to the Part A image; Java is not used by Part B).
+#   docker build -f Dockerfile.runtime -t bda-a3a-spark .
+#   docker run --rm --network container:bda-neo4j -v "<PATH_TO_ml-100k>:/data/ml-100k:ro" \
+#     -v "${PWD}:/work" -w /work bda-a3a-spark \
+#     python partB/load_neo4j.py --data-dir /data/ml-100k --uri bolt://localhost:7687 \
+#       --user neo4j --password bdaGraph2026 --reset
+FROM python:3.14.10-slim-trixie
+RUN apt-get update && apt-get install -y --no-install-recommends openjdk-21-jre-headless procps \
+    && rm -rf /var/lib/apt/lists/*
+ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+# Pre-fetch the GraphFrames JVM package into the image's Ivy cache
+RUN echo 'from pyspark.sql import SparkSession; SparkSession.builder.config("spark.jars.packages","io.graphframes:graphframes-spark4_2.13:0.12.3").getOrCreate().stop()' > /tmp/warm.py \
+    && python /tmp/warm.py && rm /tmp/warm.py

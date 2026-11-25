@@ -1,0 +1,2 @@
+workers,hub_degree,vertex_partition_max_work,vertex_partition_mean_work,vertex_partition_imbalance,hub_owner,hub_owner_work,edge_partition_max_work,edge_partition_mean_work,edge_partition_imbalance,replication_factor,hub_replica_count,gas_sync_messages
+8,50000,79837,37500.0,2.1289866666666666,0,79837,18750,18750.0,1.0,1.2920419564473835,8,30738

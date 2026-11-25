@@ -1,0 +1,12 @@
+metric,value
+logical_vertices,2625
+logical_user_vertices,943
+logical_movie_vertices,1682
+logical_edges,100000
+directed_edges,200000
+min_rating,1
+max_rating,5
+max_user_degree,737
+max_user_id,405
+max_movie_degree,583
+max_movie_id,50
